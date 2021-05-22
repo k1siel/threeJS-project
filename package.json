@@ -1,0 +1,36 @@
+{
+  "name": "three-js-project",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000t\u0000h\u0000r\u0000e\u0000e\u0000J\u0000S\u0000-\u0000p\u0000r\u0000o\u0000j\u0000e\u0000c\u0000t\u0000\r\u0000 \u0000",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --progress --watch",
+    "server": "webpack serve --open",
+    "go": "webpack && webpack serve --open"
+  },
+  "dependencies": {
+    "css-loader": "^5.2.4",
+    "html-webpack-plugin": "^5.3.1",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.36.2",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "devDependencies": {
+    "file-loader": "^6.2.0",
+    "three": "^0.126.0",
+    "url-loader": "^4.1.1"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/k1siel/threeJS-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/k1siel/threeJS-project/issues"
+  },
+  "homepage": "https://github.com/k1siel/threeJS-project#readme"
+}
