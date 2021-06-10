@@ -508,7 +508,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Main)\n/* harmony export */ });\n/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! three */ \"./node_modules/three/build/three.module.js\");\n/* harmony import */ var _Renderer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Renderer */ \"./src/components/Renderer.js\");\n/* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Camera */ \"./src/components/Camera.js\");\n/* harmony import */ var _Ico__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Ico */ \"./src/components/Ico.js\");\n/* harmony import */ var _Model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Model */ \"./src/components/Model.js\");\n/* harmony import */ var _Keyboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Keyboard */ \"./src/components/Keyboard.js\");\n/* harmony import */ var _Animation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Animation */ \"./src/components/Animation.js\");\n/* harmony import */ var _Config__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Config */ \"./src/components/Config.js\");\n/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! socket.io-client */ \"./node_modules/socket.io-client/wrapper.mjs\");\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nclass Main {\r\n    constructor(container) {\r\n        // właściwości klasy\r\n        this.socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_7__.io)(\"http://localhost:8080/\")\r\n\r\n        this.container = container;\r\n        this.scene = new three__WEBPACK_IMPORTED_MODULE_8__.Scene();\r\n        this.renderer = new _Renderer__WEBPACK_IMPORTED_MODULE_0__.default(this.scene, container);\r\n        this.camera = new _Camera__WEBPACK_IMPORTED_MODULE_1__.default(this.renderer.threeRenderer);\r\n        this.ico = new _Ico__WEBPACK_IMPORTED_MODULE_2__.default(this.scene);\r\n\r\n        const gridHelper = new three__WEBPACK_IMPORTED_MODULE_8__.GridHelper(1000, 10);\r\n        this.scene.add(gridHelper);\r\n\r\n       \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n        this.render();\r\n    }\r\n\r\n    render() {\r\n\r\n     \r\n\r\n      \r\n\r\n        this.renderer.render(this.scene, this.camera.threeCamera);\r\n\r\n    \r\n\r\n        requestAnimationFrame(this.render.bind(this));\r\n\r\n\r\n    }\r\n}\n\n//# sourceURL=webpack://three-js-project/./src/components/Main.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Main)\n/* harmony export */ });\n/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! three */ \"./node_modules/three/build/three.module.js\");\n/* harmony import */ var _Renderer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Renderer */ \"./src/components/Renderer.js\");\n/* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Camera */ \"./src/components/Camera.js\");\n/* harmony import */ var _Ico__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Ico */ \"./src/components/Ico.js\");\n/* harmony import */ var _Model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Model */ \"./src/components/Model.js\");\n/* harmony import */ var _Keyboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Keyboard */ \"./src/components/Keyboard.js\");\n/* harmony import */ var _Animation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Animation */ \"./src/components/Animation.js\");\n/* harmony import */ var _Config__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Config */ \"./src/components/Config.js\");\n/* harmony import */ var _socketController_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./socketController.js */ \"./src/components/socketController.js\");\n/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! socket.io-client */ \"./node_modules/socket.io-client/wrapper.mjs\");\n/* harmony import */ var _Player_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Player.js */ \"./src/components/Player.js\");\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nclass Main {\r\n    constructor(container) {\r\n\r\n\r\n        this.socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_8__.io)()\r\n\r\n        this.socket.on('connection', () => {\r\n            console.log(\"connceted!\")\r\n        })\r\n\r\n        this.player1;\r\n        this.player2;\r\n        let self = this\r\n\r\n        this.socket.on('startGame', function (data, color) {\r\n            //console.log(\"startGame\", data)\r\n            \r\n            if (color == \"black\") {\r\n                self.player1 = new _Player_js__WEBPACK_IMPORTED_MODULE_9__.default(\"black\", data.user1)\r\n                self.player2 = new _Player_js__WEBPACK_IMPORTED_MODULE_9__.default(\"white\", data.user2)\r\n            }\r\n            else{\r\n                self.player2 = new _Player_js__WEBPACK_IMPORTED_MODULE_9__.default(\"black\", data.user1)\r\n                self.player1 = new _Player_js__WEBPACK_IMPORTED_MODULE_9__.default(\"white\", data.user2)\r\n            }\r\n\r\n            console.log(self.player1, self.player2)\r\n        });\r\n\r\n\r\n\r\n        this.container = container;\r\n        this.scene = new three__WEBPACK_IMPORTED_MODULE_10__.Scene();\r\n        this.renderer = new _Renderer__WEBPACK_IMPORTED_MODULE_0__.default(this.scene, container);\r\n        this.camera = new _Camera__WEBPACK_IMPORTED_MODULE_1__.default(this.renderer.threeRenderer);\r\n        this.ico = new _Ico__WEBPACK_IMPORTED_MODULE_2__.default(this.scene);\r\n\r\n        const gridHelper = new three__WEBPACK_IMPORTED_MODULE_10__.GridHelper(1000, 10);\r\n        this.scene.add(gridHelper);\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n        this.render();\r\n    }\r\n\r\n    render() {\r\n\r\n\r\n\r\n\r\n\r\n        this.renderer.render(this.scene, this.camera.threeCamera);\r\n\r\n\r\n\r\n        requestAnimationFrame(this.render.bind(this));\r\n\r\n\r\n    }\r\n\r\n\r\n}\n\n//# sourceURL=webpack://three-js-project/./src/components/Main.js?");
 
 /***/ }),
 
@@ -523,6 +523,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+/***/ "./src/components/Player.js":
+/*!**********************************!*\
+  !*** ./src/components/Player.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Player)\n/* harmony export */ });\n\r\nclass Player {\r\n    constructor(color, id) {\r\n       this.color = color\r\n       this.id = id\r\n    }\r\n\r\n\r\n}\n\n//# sourceURL=webpack://three-js-project/./src/components/Player.js?");
+
+/***/ }),
+
 /***/ "./src/components/Renderer.js":
 /*!************************************!*\
   !*** ./src/components/Renderer.js ***!
@@ -534,6 +545,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+/***/ "./src/components/socketController.js":
+/*!********************************************!*\
+  !*** ./src/components/socketController.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Socket)\n/* harmony export */ });\n/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ \"./node_modules/socket.io-client/wrapper.mjs\");\n\r\n\r\nclass Socket {\r\n    constructor() {\r\n     \r\n\r\n\r\n    }\r\n\r\n\r\n}\n\n//# sourceURL=webpack://three-js-project/./src/components/socketController.js?");
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -541,7 +563,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ \"./src/style.css\");\n/* harmony import */ var _components_Main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Main */ \"./src/components/Main.js\");\n\r\n\r\n\r\n\r\n\r\nfunction init() {\r\n    //div\r\n    const container = document.getElementById('root');\r\n    //main class object\r\n    new _components_Main__WEBPACK_IMPORTED_MODULE_1__.default(container);\r\n}\r\n\r\ninit();\n\n//# sourceURL=webpack://three-js-project/./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ \"./src/style.css\");\n/* harmony import */ var _components_Main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Main */ \"./src/components/Main.js\");\n\r\n\r\n\r\n\r\n\r\n\r\nfunction init() {\r\n    //div\r\n    \r\n\r\n  \r\n    const container = document.getElementById('root');\r\n    //main class object\r\n    new _components_Main__WEBPACK_IMPORTED_MODULE_1__.default(container);\r\n}\r\n\r\ninit();\n\n//# sourceURL=webpack://three-js-project/./src/index.js?");
 
 /***/ })
 
