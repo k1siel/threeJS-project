@@ -15,15 +15,15 @@ import Keyboard from "./Keyboard"
 import Animation from "./Animation"
 import Config from './Config';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+import { io } from "socket.io-client";
 
 
-//textures
 
 
 export default class Main {
     constructor(container) {
         // właściwości klasy
-
+        //this.socket = io("http://localhost:8080/")
 
         this.container = container;
         this.scene = new Scene();
