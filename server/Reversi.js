@@ -127,6 +127,18 @@ class Reversi {
             xd[list[k][0]][list[k][1]] = you
         }
     }
+    
+    moveCheck(moveArray){
+        var brak_ruchu = false
+        for(f=0;f<8;f++){
+            for(g=0;g<8;g++){
+                if(skr[f][g] == 1){
+                    brak_ruchu = true
+                }
+            }
+        }
+        // if true tu już wiesz co się ma dziać
+    }
 }
 
 
