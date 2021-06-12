@@ -1,7 +1,7 @@
 import {
     IcosahedronGeometry,
     MeshPhongMaterial,
-    
+
     Mesh,
     PlaneGeometry,
     DoubleSide,
@@ -91,7 +91,7 @@ export default class Board {
         }
 
 
-        console.log(this.planes)
+
 
         this.light = new DirectionalLight(0xa3fff3, 0.7)
         this.scene.add(this.light)
@@ -124,7 +124,7 @@ export default class Board {
             this.blackPiece = clone
             this.whitePiece = model
 
-        
+
         };
 
     }
@@ -132,7 +132,7 @@ export default class Board {
 
     updateBoard(boardArray) {
         this.pieces.forEach(element => {
-            console.log(element)
+           
             this.scene.remove(element)
         });
         this.pieces = []
@@ -161,7 +161,7 @@ export default class Board {
             }
         }
 
-        console.log(this.pieces)
+
 
 
 

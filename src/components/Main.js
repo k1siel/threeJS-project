@@ -54,35 +54,25 @@ export default class Main {
 
         this.socket = io()
 
-        this.socket.on('connection', () => {
-            console.log("connceted!")
-        })
 
         this.player1;
         this.player2;
         this.turn;
         let self = this
 
-        this.boardArray =  [
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, "w", "b", 0, 0, 0],
-            [0, 0, 0, "b", "w", 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0]
-        ]
+        this.boardArray;
+
+        this.clickable;
 
         this.socket.on('startGame', function (data, color) {
             //console.log("startGame", data)
 
-            if (color == "black") {
-                self.player1 = new Player("black", data.user1)
-                self.player2 = new Player("white", data.user2)
+            if (color == "b") {
+                self.player1 = new Player("b", data.user1)
+                self.player2 = new Player("w", data.user2)
             } else {
-                self.player2 = new Player("black", data.user1)
-                self.player1 = new Player("white", data.user2)
+                self.player2 = new Player("b", data.user1)
+                self.player1 = new Player("w", data.user2)
             }
             self.turn = data.turn
             self.boardArray = data.gameArray
@@ -92,9 +82,9 @@ export default class Main {
             self.board.updateBoard(self.boardArray)
         });
 
-        console.log(document)
+
         document.addEventListener("click", (e) => {
-            console.log("klikłeś sie chuju")
+
             let click = new Click()
 
             click.mouseVector.x = (e.clientX / $(window).width()) * 2 - 1;
@@ -104,7 +94,41 @@ export default class Main {
 
             let intersects = click.raycaster.intersectObjects(this.board.planes)
 
-            console.log(intersects)
+            // console.log(intersects)
+
+            if (self.player1.color == self.turn) {
+                if (intersects.length > 0) {
+                    let coordX = intersects[0].object.gameX
+                    let coordZ = intersects[0].object.gameZ
+                    console.log(coordX, coordZ)
+                    if (self.clickable[coordX][coordZ] == 1) {
+                        // console.log("emit", self.clickable)
+                        self.socket.emit("clicked", {
+                            player: self.player1,
+                            coordX: coordX,
+                            coordZ: coordZ
+                        })
+                    }
+
+
+
+
+                }
+            }
+        })
+
+        this.socket.on("yourTurn", (data) => {
+            console.log(data)
+            self.clickable = data
+
+        })
+
+        this.socket.on("gameUpdate", (data) => {
+            console.log("gameUpdate")
+            self.boardArray = data.updatedTab
+            self.turn = data.turn
+            self.updateTurn()
+            self.board.updateBoard(self.boardArray)
         })
 
 
@@ -132,7 +156,7 @@ export default class Main {
         let opponentUI = document.createElement("div")
         opponentUI.id = "opponentUI"
         opponentUI.innerHTML = "OPPONENT"
-        if (this.player1.color == "black") {
+        if (this.player1.color == "b") {
             yourUI.style.backgroundColor = "#090c0f"
             yourUI.style.color = "#838d9e"
             opponentUI.style.backgroundColor = "#f2f0ed"
@@ -162,14 +186,14 @@ export default class Main {
         let turn = document.getElementById("turn")
         console.log(this.turn)
 
-        if (this.turn == "black") {
+        if (this.turn == "b") {
             turn.style.backgroundColor = "#090c0f"
             turn.style.color = "#838d9e"
             turn.innerHTML = "TURN <br>" + this.turn
         } else {
             turn.style.backgroundColor = "#f2f0ed"
             turn.style.color = "#383830"
-            turn.innerHTML =  "TURN <br>" + this.turn
+            turn.innerHTML = "TURN <br>" + this.turn
         }
     }
 

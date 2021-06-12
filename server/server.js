@@ -1,5 +1,3 @@
-
-
 var express = require("express")
 var app = express()
 const PORT = process.env.PORT || 8080;
@@ -75,10 +73,10 @@ io.on('connection', (socket) => {
         let roomData = {
             user1: waitingUser,
             user2: user,
-            color1: "black",
-            color2: "white",
+            color1: "w",
+            color2: "b",
             gameArray: reversi.basicTable,
-            turn: "black",
+            turn: "w",
         }
         let room = new Room(roomData)
 
@@ -93,7 +91,8 @@ io.on('connection', (socket) => {
         io.to(waitingUser).emit('startGame', roomData, roomData.color1);
         io.to(user).emit('startGame', roomData, roomData.color2);
 
-        // io.to(waitingUser).emit("")
+        let moveArr = reversi.checkPlaces("w", reversi.basicTable)
+        io.to(waitingUser).emit("yourTurn", moveArr)
 
         waitingUser = undefined
     } else {
@@ -102,10 +101,73 @@ io.on('connection', (socket) => {
     console.log(waitingUser)
 
 
+    socket.on("clicked", (data) => {
+        // console.log(data, data.player.id)
+
+        Room.findOne({
+            $or: [{
+                user1: data.player.id
+            }, {
+                user2: data.player.id
+            }]
+        }, function (err, gameRoom) {
+            if (err) return handleError(err);
+            // Prints "Space Ghost is a talk show host".
+            // console.log("room", room);
+            let roomId = gameRoom._id
+
+            console.log(roomId)
+            let newTurn;
+            if (gameRoom.turn == "w") {
+                newTurn = "b"
+            } else {
+                newTurn = "w"
+            }
+            let updatedTab = reversi.move(data.player.color, gameRoom.gameArray, data.coordX, data.coordZ)
+
+            console.log(newTurn)
+            console.log(updatedTab)
+            Room.findByIdAndUpdate(roomId, {
+                "turn": newTurn,
+                "gameArray": updatedTab
+            }, function (err, result) {
+                //console.log(err, result)
+            })
+            let sendData = {
+                updatedTab: updatedTab,
+                turn: newTurn,
+            }
+
+            let turnPlayer;
+            if (gameRoom.color1 == newTurn) {
+                turnPlayer = gameRoom.user1
+            } else {
+                turnPlayer = gameRoom.user2
+            }
+
+            let checkColor;
+            if (newTurn == "w") {
+                checkColor = "w"
+            } else {
+                checkColor = "b"
+            }
+            let moveArr = reversi.checkPlaces(checkColor, updatedTab)
+
+            io.to(turnPlayer).emit("yourTurn", moveArr)
+            io.to(gameRoom.user1).to(gameRoom.user2).emit("gameUpdate", sendData)
+        })
+
+
+
+    });
+
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
 });
+
+
+
 
 
 
