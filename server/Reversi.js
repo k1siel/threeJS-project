@@ -127,17 +127,25 @@ class Reversi {
             xd[list[k][0]][list[k][1]] = you
         }
     }
-    
+    //to jest array z checkPlaces
     moveCheck(moveArray){
+        var skr = moveArray
         var brak_ruchu = false
         for(f=0;f<8;f++){
             for(g=0;g<8;g++){
                 if(skr[f][g] == 1){
                     brak_ruchu = true
+                }else{
                 }
             }
         }
-        // if true tu już wiesz co się ma dziać
+        // if true tu już wiesz co się ma dziać, ja nwm jak to wygląda
+        // nie odsyła się nic do klientów
+        // zmiana tury
+        // checkPlaces dla tego co ma ruch
+        // i wtedy odsyłanie
+        // pewnie trzeba to całe w paczke zebrać typu funkcja(xyz){i tu cała sekwencja kończaca się moveCheck if true else}
+        // i bedzie działać
     }
 }
 
