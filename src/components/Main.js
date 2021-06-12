@@ -4,25 +4,53 @@ import {
     Clock,
     Vector3,
     GridHelper,
-    
+
 
 
 } from 'three';
 import Renderer from './Renderer';
 import Camera from './Camera';
 import Ico from './Board';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import {
+    OrbitControls
+} from 'three/examples/jsm/controls/OrbitControls.js'
 
 import {
     io
 } from "socket.io-client";
 import Player from "./Player.js"
 import Board from './Board';
+import Click from "./Click"
 
 
 export default class Main {
     constructor(container) {
 
+
+
+        this.container = container;
+        this.scene = new Scene();
+        this.renderer = new Renderer(container);
+        this.camera = new Camera(30, window.innerWidth, window.innerHeight);
+        this.camera.position.set(400, 200, 0)
+        this.camera.lookAt(new Vector3(0, 0, 0));
+
+
+
+        const gridHelper = new GridHelper(1000, 32);
+        this.scene.add(gridHelper);
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+
+
+
+
+
+
+
+
+
+
+        this.board = new Board(this.scene)
 
         this.socket = io()
 
@@ -32,7 +60,19 @@ export default class Main {
 
         this.player1;
         this.player2;
+        this.turn;
         let self = this
+
+        this.boardArray = [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, "B", "W", 0, 0, 0],
+            [0, 0, 0, "W", "B", 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0]
+        ]
 
         this.socket.on('startGame', function (data, color) {
             //console.log("startGame", data)
@@ -44,37 +84,34 @@ export default class Main {
                 self.player2 = new Player("black", data.user1)
                 self.player1 = new Player("white", data.user2)
             }
+            this.turn = data.turn
 
             console.log(self.player1, self.player2)
 
             self.createUI()
+            self.board.updateBoard(self.boardArray)
         });
 
+        console.log(document)
+        document.addEventListener("click", (e) => {
+            console.log("klikłeś sie chuju")
+            let click = new Click()
 
+            click.mouseVector.x = (e.clientX / $(window).width()) * 2 - 1;
+            click.mouseVector.y = -(e.clientY / $(window).height()) * 2 + 1;
 
-        this.container = container;
-        this.scene = new Scene();
-        this.renderer = new Renderer(container);
-        this.camera = new Camera(30, window.innerWidth, window.innerHeight);
-        this.camera.position.set(400, 200, 0)
-        this.camera.lookAt(new Vector3(0, 0, 0));
+            click.raycaster.setFromCamera(click.mouseVector, this.camera);
 
-        this.board = new Board(this.scene)
+            let intersects = click.raycaster.intersectObjects(this.board.planes)
 
-        const gridHelper = new GridHelper(1000, 10);
-        this.scene.add(gridHelper);
-        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-
-
-
-
+            console.log(intersects)
+        })
 
 
         this.render();
     }
 
     render() {
-
 
 
         this.renderer.setViewport(0, 0, innerWidth, innerHeight);
@@ -105,12 +142,14 @@ export default class Main {
             opponentUI.style.color = "#838d9e"
             yourUI.style.backgroundColor = "#f2f0ed"
             yourUI.style.color = "#383830"
-            
+
         }
 
         this.container.appendChild(yourUI)
         this.container.appendChild(opponentUI)
 
+
+        
 
     }
 

@@ -1,3 +1,5 @@
+import Reversi from "./Reversi.js"
+
 var express = require("express")
 var app = express()
 const PORT = process.env.PORT || 8080;
@@ -10,8 +12,10 @@ const io = require('socket.io')(server, {
 const mongoose = require('mongoose');
 
 const path = require('path')
-const bodyParser = require("body-parser")
+const bodyParser = require("body-parser");
 
+
+let reversi = new Reversi()
 
 //static files routing
 app.use(express.static(path.join(__dirname, "..", "dist")))
@@ -84,7 +88,7 @@ io.on('connection', (socket) => {
 
         // socket.broadcast.emit('startGame', roomData)
         console.log("user:", user, " waitingUser:", waitingUser)
-        
+
         io.to(waitingUser).emit('startGame', roomData, roomData.color1);
         io.to(user).emit('startGame', roomData, roomData.color2);
 
@@ -97,7 +101,7 @@ io.on('connection', (socket) => {
     console.log(waitingUser)
 
 
-    socket.on("receivedStart", (data)=>{
+    socket.on("receivedStart", (data) => {
         socket.to(data.user1).to(data.user2).emit("newStart", data)
     })
     socket.on('disconnect', () => {

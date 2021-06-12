@@ -19,8 +19,7 @@ module.exports = {
         })
     ],
     module: {
-        rules: [
-            {
+        rules: [{
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
             },
@@ -33,6 +32,10 @@ module.exports = {
                         name: 'images/[hash]-[name].[ext]'
                     }
                 }]
+            },
+            {
+                test: /\.(dae)$/i,
+                type: 'asset/resource',
             }
         ]
     },
