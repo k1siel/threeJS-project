@@ -1,6 +1,7 @@
 import {
     IcosahedronGeometry,
     MeshPhongMaterial,
+    
     Mesh,
     PlaneGeometry,
     DoubleSide,
@@ -138,7 +139,7 @@ export default class Board {
 
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
-                if (boardArray[i][j] == "B") {
+                if (boardArray[i][j] == "b") {
                     let clone = this.blackPiece.clone()
                     clone.position.x = i * 32 - 128
                     clone.position.z = j * 32 - 128
@@ -146,7 +147,7 @@ export default class Board {
                     clone.gameZ = j
                     this.pieces.push(clone)
                     this.scene.add(clone)
-                } else if (boardArray[i][j] == "W") {
+                } else if (boardArray[i][j] == "w") {
                     let clone = this.whitePiece.clone()
                     clone.position.x = i * 32 - 128
                     clone.position.z = j * 32 - 128
@@ -159,6 +160,8 @@ export default class Board {
 
             }
         }
+
+        console.log(this.pieces)
 
 
 

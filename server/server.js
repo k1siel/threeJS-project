@@ -1,4 +1,4 @@
-import Reversi from "./Reversi.js"
+
 
 var express = require("express")
 var app = express()
@@ -13,6 +13,7 @@ const mongoose = require('mongoose');
 
 const path = require('path')
 const bodyParser = require("body-parser");
+const Reversi = require("./Reversi");
 
 
 let reversi = new Reversi()
@@ -76,7 +77,7 @@ io.on('connection', (socket) => {
             user2: user,
             color1: "black",
             color2: "white",
-            gameArray: emptyArray,
+            gameArray: reversi.basicTable,
             turn: "black",
         }
         let room = new Room(roomData)
@@ -92,7 +93,7 @@ io.on('connection', (socket) => {
         io.to(waitingUser).emit('startGame', roomData, roomData.color1);
         io.to(user).emit('startGame', roomData, roomData.color2);
 
-
+        // io.to(waitingUser).emit("")
 
         waitingUser = undefined
     } else {
@@ -101,9 +102,6 @@ io.on('connection', (socket) => {
     console.log(waitingUser)
 
 
-    socket.on("receivedStart", (data) => {
-        socket.to(data.user1).to(data.user2).emit("newStart", data)
-    })
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });

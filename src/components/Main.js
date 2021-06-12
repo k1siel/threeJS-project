@@ -63,12 +63,12 @@ export default class Main {
         this.turn;
         let self = this
 
-        this.boardArray = [
+        this.boardArray =  [
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, "B", "W", 0, 0, 0],
-            [0, 0, 0, "W", "B", 0, 0, 0],
+            [0, 0, 0, "w", "b", 0, 0, 0],
+            [0, 0, 0, "b", "w", 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0]
@@ -84,9 +84,9 @@ export default class Main {
                 self.player2 = new Player("black", data.user1)
                 self.player1 = new Player("white", data.user2)
             }
-            this.turn = data.turn
-
-            console.log(self.player1, self.player2)
+            self.turn = data.turn
+            self.boardArray = data.gameArray
+            console.log(self.player1, self.player2, self.boardArray)
 
             self.createUI()
             self.board.updateBoard(self.boardArray)
@@ -148,9 +148,29 @@ export default class Main {
         this.container.appendChild(yourUI)
         this.container.appendChild(opponentUI)
 
+        let turn = document.createElement("div")
 
-        
+        turn.id = "turn"
+        this.container.appendChild(turn)
+        this.updateTurn()
 
+
+    }
+
+
+    updateTurn() {
+        let turn = document.getElementById("turn")
+        console.log(this.turn)
+
+        if (this.turn == "black") {
+            turn.style.backgroundColor = "#090c0f"
+            turn.style.color = "#838d9e"
+            turn.innerHTML = "TURN <br>" + this.turn
+        } else {
+            turn.style.backgroundColor = "#f2f0ed"
+            turn.style.color = "#383830"
+            turn.innerHTML =  "TURN <br>" + this.turn
+        }
     }
 
 }
