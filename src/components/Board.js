@@ -1,6 +1,8 @@
 import {
     IcosahedronGeometry,
     MeshPhongMaterial,
+    MeshLambertMaterial,
+    MeshNormalMaterial,
 
     Mesh,
     PlaneGeometry,
@@ -32,21 +34,20 @@ export default class Board {
 
                 if (i % 2 == 0) {
                     if (j % 2 == 0) {
-                        color = 0xFFFFFF
+                        color = 0x999999
                     } else {
-                        color = 0x222222
+                        color = 0x666666
                     }
                 } else {
                     if (j % 2 == 0) {
-                        color = 0x222222
+                        color = 0x666666
                     } else {
-                        color = 0xFFFFFF
+                        color = 0x999999
                     }
                 }
 
-                const material = new MeshPhongMaterial({
+                const material = new MeshLambertMaterial({
                     color: color,
-                    shininess: 10,
                     map: new TextureLoader().load(fieldTex),
                 });
 
@@ -69,8 +70,8 @@ export default class Board {
         }
 
 
-        for (let i = 0; i < 4; i++) {
-            let light = new PointLight(0xfcba03, 10, 320)
+        for (let i = 0; i < 12; i++) {
+            let light = new PointLight(0xffffff, 10, 320)
             if (i == 0) {
                 light.position.set(-100, 300, -100)
             }
@@ -87,13 +88,41 @@ export default class Board {
                 light.position.set(-100, 300, 100)
             }
 
+            if (i == 4) {
+                light.position.set(-300, 50, 300)
+            }
+
+            if (i == 5) {
+                light.position.set(300, 50, 300)
+            }
+
+            if (i == 6) {
+                light.position.set(300, 50, -300)
+            }
+
+            if (i == 7) {
+                light.position.set(-300, 50, -300)
+            }
+
+            if (i == 8) {
+                light.position.set(-300, 50, 0)
+            }
+            if (i == 9) {
+                light.position.set(300, 50, )
+            }
+            if (i == 10) {
+                light.position.set(0, 50, -300)
+            }
+            if (i == 11) {
+                light.position.set(0, 50, 300)
+            }
             this.scene.add(light)
         }
 
 
 
 
-        this.light = new DirectionalLight(0xa3fff3, 0.7)
+        this.light = new DirectionalLight(0xffffff, 1)
         this.scene.add(this.light)
 
 
@@ -108,16 +137,14 @@ export default class Board {
 
 
             console.log(model.children[0])
-            model.children[0].material = new MeshPhongMaterial({
+            model.children[0].material = new MeshLambertMaterial({
                 color: 0xFFFFFF,
-                shininess: 20,
                 map: new TextureLoader().load(fieldTex),
             })
             let clone = model.clone()
             clone.position.z = 32
-            clone.children[0].material = new MeshPhongMaterial({
+            clone.children[0].material = new MeshLambertMaterial({
                 color: 0x333333,
-                shininess: 20,
                 map: new TextureLoader().load(fieldTex),
             })
 
