@@ -116,7 +116,7 @@ io.on('connection', (socket) => {
             // console.log("room", room);
             let roomId = gameRoom._id
 
-            console.log(roomId)
+
             let newTurn;
             if (gameRoom.turn == "w") {
                 newTurn = "b"
@@ -125,8 +125,7 @@ io.on('connection', (socket) => {
             }
             let updatedTab = reversi.move(data.player.color, gameRoom.gameArray, data.coordX, data.coordZ)
 
-            console.log(newTurn)
-            console.log(updatedTab)
+
             Room.findByIdAndUpdate(roomId, {
                 "turn": newTurn,
                 "gameArray": updatedTab
@@ -139,10 +138,13 @@ io.on('connection', (socket) => {
             }
 
             let turnPlayer;
+            let noTurnPlayer;
             if (gameRoom.color1 == newTurn) {
                 turnPlayer = gameRoom.user1
+                noTurnPlayer = gameRoom.user2
             } else {
                 turnPlayer = gameRoom.user2
+                noTurnPlayer = gameRoom.user1
             }
 
             let checkColor;
@@ -152,9 +154,54 @@ io.on('connection', (socket) => {
                 checkColor = "b"
             }
             let moveArr = reversi.checkPlaces(checkColor, updatedTab)
+            let moveExist = reversi.moveCheck(moveArr)
 
-            io.to(turnPlayer).emit("yourTurn", moveArr)
-            io.to(gameRoom.user1).to(gameRoom.user2).emit("gameUpdate", sendData)
+
+            if (moveExist) {
+                io.to(turnPlayer).emit("yourTurn", moveArr)
+
+                io.to(gameRoom.user1).to(gameRoom.user2).emit("gameUpdate", sendData)
+            } else {
+                let newerTurn;
+
+                if (newTurn == "w") {
+                    newerTurn = "b"
+                } else {
+                    newerTurn = "w"
+                }
+
+                Room.findByIdAndUpdate(roomId, {
+                    "turn": newerTurn,
+                }, function (err, result) {
+                    //console.log(err, result)
+                })
+
+                sendData = {
+                    updatedTab: updatedTab,
+                    turn: newerTurn,
+                }
+                let checkColorNew;
+                if (checkColor == "b") {
+                    checkColorNew = "w"
+                } else {
+                    checkColorNew = "b"
+                }
+
+                moveArr = reversi.checkPlaces(checkColorNew, updatedTab)
+                moveExist = reversi.moveCheck(moveArr)
+                
+                if (moveExist) {
+                    io.to(noTurnPlayer).emit("yourTurn", moveArr)
+                    io.to(gameRoom.user1).to(gameRoom.user2).emit("gameUpdate", sendData)
+                    console.log("BRAK RUCHUUUUUUUUUUUUUUUUUUUUUU")
+                }
+                else{
+                 
+                    io.to(gameRoom.user1).to(gameRoom.user2).emit("gameEnd", sendData)
+                    console.log("ENDDDDDDDDDDDDDDDDDDDDDDD")
+                }
+            }
+
         })
 
 

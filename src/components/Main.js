@@ -35,10 +35,11 @@ export default class Main {
         this.camera.position.set(400, 200, 0)
         this.camera.lookAt(new Vector3(0, 0, 0));
 
+        this.black = 0
+        this.white = 0
 
-
-        const gridHelper = new GridHelper(1000, 32);
-        this.scene.add(gridHelper);
+        // const gridHelper = new GridHelper(1000, 32);
+        // this.scene.add(gridHelper);
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
 
@@ -132,6 +133,15 @@ export default class Main {
         })
 
 
+        this.socket.on("gameEnd", (data) => {
+            self.boardArray = data.updatedTab
+            self.turn = data.turn
+            self.updateTurn()
+            self.board.updateBoard(self.boardArray)
+            self.gameEnd()
+
+        })
+
         this.render();
     }
 
@@ -159,13 +169,17 @@ export default class Main {
         if (this.player1.color == "b") {
             yourUI.style.backgroundColor = "#090c0f"
             yourUI.style.color = "#838d9e"
+            // yourUI.style.color = "#ff6781"
             opponentUI.style.backgroundColor = "#f2f0ed"
             opponentUI.style.color = "#383830"
+            // opponentUI.style.color = "#ff6781"
         } else {
             opponentUI.style.backgroundColor = "#090c0f"
             opponentUI.style.color = "#838d9e"
+            // opponentUI.style.color = "#ff6781"
             yourUI.style.backgroundColor = "#f2f0ed"
             yourUI.style.color = "#383830"
+            // yourUI.style.color = "#ff6781"
 
         }
 
@@ -189,12 +203,58 @@ export default class Main {
         if (this.turn == "b") {
             turn.style.backgroundColor = "#090c0f"
             turn.style.color = "#838d9e"
-            turn.innerHTML = "TURN <br>" + this.turn
+            // turn.style.color = "#ff6781"
+            turn.innerHTML = "TURN <br>" + "black"
         } else {
             turn.style.backgroundColor = "#f2f0ed"
             turn.style.color = "#383830"
-            turn.innerHTML = "TURN <br>" + this.turn
+            // turn.style.color = "#ff6781"
+            turn.innerHTML = "TURN <br>" + "white"
         }
+        this.black = 0
+        this.white = 0
+
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                if (this.boardArray[i][j] == "b") {
+                    this.black++
+                } else if (this.boardArray[i][j] == "w") {
+                    this.white++
+                }
+            }
+        }
+
+        if (this.player1.color == "b") {
+            document.getElementById("yourUI").innerHTML = "YOU <br>" + this.black
+            document.getElementById("opponentUI").innerHTML = "OPPONENT <br>" + this.white
+        } else {
+            document.getElementById("yourUI").innerHTML = "YOU <br>" + this.white
+            document.getElementById("opponentUI").innerHTML = "OPPONENT <br>" + this.black
+        }
+
     }
 
+
+    gameEnd() {
+        let end = document.createElement("div")
+        end.id = "end"
+        console.log("black", this.black, "white", this.white)
+        if (this.black > this.white) {
+            end.innerHTML = "Black has won!"
+            end.style.backgroundColor = "#090c0f"
+            end.style.color = "#838d9e"
+
+        } else if (this.white > this.black) {
+            end.style.backgroundColor = "#f2f0ed"
+            end.style.color = "#383830"
+            end.innerHTML = "White has won!"
+        } else {
+
+            end.style.backgroundColor ="#474747"
+            end.style.color = "#a6a6a6"
+            end.innerHTML = "Its a draw!"
+        }
+
+        this.container.appendChild(end)
+    }
 }
