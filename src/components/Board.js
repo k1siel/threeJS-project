@@ -2,7 +2,6 @@ import {
     IcosahedronGeometry,
     MeshPhongMaterial,
     MeshLambertMaterial,
-    MeshNormalMaterial,
 
     Mesh,
     PlaneGeometry,
